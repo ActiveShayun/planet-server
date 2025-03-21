@@ -10,7 +10,7 @@ const port = process.env.PORT || 9000
 const app = express()
 // middleware
 const corsOptions = {
-  origin: [ 'http://localhost:5173'
+  origin: ['http://localhost:5173', 'http://localhost:5174'
   ],
   credentials: true,
   optionSuccessStatus: 200,
@@ -100,6 +100,20 @@ async function run() {
       const planets = req.body;
       console.log('planets', planets);
       const result = await plantCollection.insertOne(planets)
+      res.send(result)
+    })
+
+    // all plant api
+    app.get('/allPlant', async (req, res) => {
+      const result = await plantCollection.find().toArray()
+      res.send(result)
+    })
+
+    // details plant api
+    app.get('/details-plant/:id', async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await plantCollection.findOne(query);
       res.send(result)
     })
 
